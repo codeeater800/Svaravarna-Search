@@ -1,108 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Sanskrit Transliteration Tool</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
-            background-color: #f0f0f0;
-        }
-        .container { 
-            max-width: 600px; 
-            margin: auto; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        label { 
-            display: block; 
-            margin-top: 15px; 
-            font-weight: bold;
-        }
-        input, select { 
-            width: 100%; 
-            padding: 10px; 
-            margin-top: 5px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px;
-        }
-        button { 
-            margin-top: 20px; 
-            padding: 10px 15px; 
-            background-color: #4CAF50; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer;
-        }
-        button:hover { 
-            background-color: #45a049; 
-        }
-        #result { 
-            margin-top: 20px; 
-            padding: 10px; 
-            background-color: #e7f3fe; 
-            border-left: 6px solid #2196F3; 
-        }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      input,
+      select {
+        margin: 10px 0;
+        padding: 10px;
+        width: 100%;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Sanskrit Transliteration Tool</h1>
-        <form id="transliterationForm">
-            <label for="text">Enter Text:</label>
-            <input type="text" id="text" name="text" required>
-
-            <label for="source_script">Source Script:</label>
-            <select id="source_script" name="source_script" required>
-                <option value="devanagari">Devanagari</option>
-                <option value="iast">IAST</option>
-            </select>
-
-            <label for="target_script">Target Script:</label>
-            <select id="target_script" name="target_script" required>
-                <option value="iast">IAST</option>
-                <option value="devanagari">Devanagari</option>
-            </select>
-
-            <button type="submit">Transliterate</button>
-        </form>
-
-        <div id="result"></div>
-    </div>
+  </head>
+  <body>
+    <h1>Sanskrit Transliteration Tool</h1>
+    <form id="transliterationForm">
+      <label for="text">Enter Text:</label>
+      <input type="text" id="text" required />
+      <label for="source_script">Source Script:</label>
+      <select id="source_script">
+        <option value="devanagari">Devanagari</option>
+        <option value="iast">IAST</option>
+      </select>
+      <label for="target_script">Target Script:</label>
+      <select id="target_script">
+        <option value="iast">IAST</option>
+        <option value="devanagari">Devanagari</option>
+      </select>
+      <button type="submit">Transliterate</button>
+    </form>
+    <div id="result"></div>
 
     <script>
-        document.getElementById('transliterationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+      document
+        .getElementById("transliterationForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const text = document.getElementById("text").value;
+          const source_script = document.getElementById("source_script").value;
+          const target_script = document.getElementById("target_script").value;
 
-            const text = document.getElementById('text').value;
-            const source_script = document.getElementById('source_script').value;
-            const target_script = document.getElementById('target_script').value;
+          const response = await fetch("/api/transliterate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text, source_script, target_script }),
+          });
 
-            const response = await fetch('/api/transliterate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text, source_script, target_script })
-            });
-
-            const result = await response.json();
-
-            const resultDiv = document.getElementById('result');
-            if(response.ok) {
-                resultDiv.innerHTML = `<strong>Transliterated Text:</strong> ${result.transliterated_text}`;
-                resultDiv.style.borderLeft = '6px solid #2196F3';
-                resultDiv.style.backgroundColor = '#e7f3fe';
-            } else {
-                resultDiv.innerHTML = `<strong>Error:</strong> ${result.error}`;
-                resultDiv.style.borderLeft = '6px solid #f44336';
-                resultDiv.style.backgroundColor = '#fdecea';
-            }
+          const result = await response.json();
+          document.getElementById("result").textContent =
+            result.transliterated_text || result.error;
         });
     </script>
-</body>
+  </body>
 </html>
