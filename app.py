@@ -7,9 +7,10 @@ app = Flask(__name__, static_folder='public')
 
 # Serve static files (HTML, CSS, etc.)
 @app.route('/')
-def index():
-    return send_from_directory('public', 'index.html')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
 
+# API endpoint for transliteration
 @app.route('/api/transliterate', methods=['POST'])
 def transliterate_text():
     data = request.json
@@ -33,9 +34,7 @@ def transliterate_text():
         return jsonify({'error': 'Invalid source_script or target_script.'}), 400
 
     transliterated_text = transliterate(text, source, target)
-
     return jsonify({'transliterated_text': transliterated_text})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
