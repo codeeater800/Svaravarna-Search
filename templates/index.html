@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transliteration App</title>
+    <link rel="stylesheet" href="/public/style.css" />
+    <!-- Link to CSS -->
+  </head>
+  <body>
+    <div class="container">
+      <h1>Transliteration Tool</h1>
+      <form id="transliterateForm">
+        <label for="inputText">Enter text for transliteration:</label><br />
+        <textarea
+          id="inputText"
+          rows="4"
+          cols="50"
+          placeholder="Enter text here..."
+        ></textarea
+        ><br />
+        <button type="button" onclick="submitText()">Transliterate</button>
+      </form>
+      <p id="result"></p>
+    </div>
+
+    <script>
+      function submitText() {
+        const inputText = document.getElementById("inputText").value;
+
+        fetch("/api/transliterate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: inputText }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerText =
+              data.transliteratedText;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
