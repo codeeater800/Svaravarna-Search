@@ -2,67 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sanskrit Transliteration Tool</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-      input,
-      select {
-        margin: 10px 0;
-        padding: 10px;
-        width: 100%;
-      }
-      button {
-        padding: 10px 15px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render Hosting Test</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Sanskrit Transliteration Tool</h1>
-    <form id="transliterationForm">
-      <label for="text">Enter Text:</label>
-      <input type="text" id="text" required />
-      <label for="source_script">Source Script:</label>
-      <select id="source_script">
-        <option value="devanagari">Devanagari</option>
-        <option value="iast">IAST</option>
-      </select>
-      <label for="target_script">Target Script:</label>
-      <select id="target_script">
-        <option value="iast">IAST</option>
-        <option value="devanagari">Devanagari</option>
-      </select>
-      <button type="submit">Transliterate</button>
-    </form>
-    <div id="result"></div>
+    <div class="container">
+      <h1>Test Web Hosting on Render</h1>
+      <p>This is a simple HTML page to test deployment on Render.</p>
+      <button onclick="testFunction()">Click me!</button>
+      <p id="response"></p>
+    </div>
 
     <script>
-      document
-        .getElementById("transliterationForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const text = document.getElementById("text").value;
-          const source_script = document.getElementById("source_script").value;
-          const target_script = document.getElementById("target_script").value;
-
-          const response = await fetch("/api/transliterate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, source_script, target_script }),
+      function testFunction() {
+        fetch("/api/test")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("response").innerHTML = data.message;
           });
-
-          const result = await response.json();
-          document.getElementById("result").textContent =
-            result.transliterated_text || result.error;
-        });
+      }
     </script>
   </body>
 </html>
