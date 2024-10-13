@@ -1,2 +1,3 @@
 Flask==2.3.2
+indic-transliteration==2.3.68
 gunicorn==21.0.1
